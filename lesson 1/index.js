@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 require('./utils/db');
 const userRoutes = require('./routes/user');
+const empRoutes = require('./routes/employee');
 // import sequelize from './utils/db.js';
 // import User from './model/user.js';
 // import Employee from './model/employee.js';
@@ -24,8 +25,14 @@ const app = express();
 // User.sync({ alter: true }); //This checks what is the current state of the table in the database (which columns it has, what are their data types, etc), and then performs the necessary changes in the table to make it match the model.
 // User.sync(); //This creates the table if it doesn't exist (and does nothing if it already exists)
 
+//body parser accept response in json format
 app.use(bodyParser.json());
+
+///routes
 app.use('/api/user', userRoutes);
+app.use('/api/empl',empRoutes)
+
+
 app.get('/', (req, res) => {
   res.send('Hello World');
 });

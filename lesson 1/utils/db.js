@@ -3,6 +3,7 @@ const { DataTypes, Model } = require('sequelize');
 
 const sequelize = new Sequelize('employeedb', 'root', '12345', {
   host: 'localhost',
+  logging: false,
   dialect:
     'mysql' /* one of  | 'postgres' | 'sqlite' | 'mariadb' | 'mssql' | 'db2' | 'snowflake' | 'oracle' */,
 });
@@ -23,7 +24,7 @@ try {
   db.employee = require('../model/employee')(Model, sequelize, DataTypes);
 
   //sync
-  db.sequelize.sync({ force: true });
+  db.sequelize.sync();
 } catch (error) {
   console.log(`Error While Syncing Model ${error}`);
 }
