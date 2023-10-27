@@ -1,5 +1,5 @@
 const { db } = require('../utils/db');
-
+const { Sequelize, Op } = require('sequelize');
 let User = db.user;
 
 //add user
@@ -66,7 +66,6 @@ let updateUser = async (req, res) => {
       where: { id: req.params.id },
     });
     res.status(200).json(updateUser);
-
   } catch (error) {
     console.log(error);
     res.status(500).json('Something Went Wrong');
@@ -86,6 +85,110 @@ let delUser = async (req, res) => {
   }
 };
 
+const getUserUsingPag = async (req, res) => {
+  try {
+    const { pages, limit } = req.body;
+
+    const data = await User.findAll({
+      offset: pages * limit,
+      limit: limit,
+    });
+
+    res.status(200).json(data);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json('Something Went Wrong');
+  }
+};
+
+const queryUser = async (req, res) => {
+  // try {
+  //   const data = await User.findAll({
+  //     group: 'lastName',
+  //     // order: [['id', 'DESC']],
+  //   });
+  //   res.status(200).json(data);
+  // } catch (error) {
+  //   console.log(error);
+  //   res.status(500).json('Some thing Went Wrong');
+  // }
+  // try {
+  //   await User.destroy({
+  //     truncate: true,
+  //   });
+  //   res.status(200).json('Deleted');
+  // } catch (error) {
+  //   console.log(error);
+  //   res.status(200).json('Some thing Went Wrong!');
+  // }
+  // try {
+  //   const data = await User.findAll({
+  //     where: {
+  //       [Op.and]: [{ firstName: 'Muhammad' }, { lastName: 'Shaikh' }],
+  //     },
+  //   });
+  //   res.status(200).json(data)
+  // } catch (error) {
+  //   console.log(error);
+  //   res.status(500).json('Something Went Wrong');
+  // }
+  // try {
+  //   const data = await User.findAll({
+  //     where: {
+  //       id: {
+  //         [Op.eq]: 1,
+  //       },
+  //     },
+  //   });
+  //   res.status(200).json(data);
+  // } catch (err) {
+  //   console.log(err);
+  //   res.status(500).json('Some thing Went Wrong!');
+  // }
+  // exclude fields
+  // try {
+  //   const data = await User.findAll({
+  //     attributes: [
+  //       'firstName',
+  //       [Sequelize.fn('COUNT', Sequelize.col('firstName')), 'firstName'] // To add the aggregation...
+  //     ],
+  //     group:['firstName']
+  //   });
+  //   res.status(200).json(data);
+  // } catch (error) {
+  //   console.error(error);
+  //   res.status(500).json('Something Went Wrong');
+  // }
+  // count fields using sequelize
+  // const data = await User.findAll({
+  //   attributes: [
+  //     ['firstName', 'first_name'], //alias as
+  //     [Sequelize.fn('COUNT', Sequelize.col('firstName')), 'count'],
+  //   ],
+  //   group: ['firstName'],
+  // });
+  // res.status(200).json(data);
+  // alias firstName as first_name
+  // const data = await User.findAll({
+  //   attributes: ['id', ['firstName', 'first_name']],
+  // });
+  // res.status(200).json(data);
+  //   It will only accepts which we are mentioned in the fields;
+  // If we want to find out specifics field in the tables:
+  // const data = await User.findAll({
+  //   attributes: ['firstName'],
+  // });
+  // res.status(200).json(data);
+  // It will add only firstName in the database:
+  // const data = await User.create(
+  //   {
+  //     firstName: 'Muhammad',
+  //     lastName: 'Naeem',
+  //   },
+  //   { fields: ['firstName'] }
+  // );
+};
+
 module.exports = {
   addUser,
   getUsers,
@@ -93,4 +196,6 @@ module.exports = {
   postUser,
   delUser,
   updateUser,
+  queryUser,
+  getUserUsingPag,
 };
