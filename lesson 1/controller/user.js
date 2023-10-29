@@ -1,7 +1,7 @@
 const { db } = require('../utils/db');
-const { Sequelize, Op } = require('sequelize');
-let User = db.user;
-
+const { Sequelize, Op, QueryTypes } = require('sequelize');
+let { user, contact } = db;
+let User = user;
 //add user
 
 let addUser = async (req, res) => {
@@ -189,6 +189,183 @@ const queryUser = async (req, res) => {
   // );
 };
 
+let finder = async (req, res) => {
+  try {
+    //find all
+    // const data = await User.findAll({}); //find all will return all the field
+    // const data = await User.findOne({
+    //   where: {
+    //     id: {
+    //       [Op.eq]: 2,
+    //     },
+    //   },
+    // });
+
+    // //find one will return only one field
+
+    // const data = await User.findOne({
+    //   where: {
+    //     lastName: {
+    //       [Op.eq]: 'Ahmed',
+    //     },
+    //   },
+    // });
+
+    // //find by pk
+
+    // const data = await User.findByPk(2);
+
+    // // find and count all
+    // const { count, rows } = await User.findAndCountAll({
+    //   where: {
+    //     lastName: {
+    //       [Op.eq]: 'Ahmed',
+    //     },
+    //   },
+    // });
+
+    // res.status(200).json({
+    //   count: count,
+    //   rows: rows,
+    // });
+
+    //find or create
+
+    const [user, create] = await User.findOrCreate({
+      where: {
+        firstName: 'Shaikoo',
+      },
+    });
+
+    res.status(200).json({
+      user: user,
+      create: create,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+};
+
+let getSetAndVirtual = async (req, res) => {
+  try {
+    const data = await User.findAll({
+      order: [['id', 'DESC']],
+    });
+
+    res.status(200).json(data);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+};
+
+let validationAndConstraint = async (req, res) => {
+  try {
+    const data = await User.create({
+      firstName: 'Muhammad12',
+      lastName: 'Naeem',
+      userName: 'muhammadnaeemshaikh11@gmail.com',
+    });
+
+    res.status(200).json(data);
+  } catch (err) {
+    console.log(err);
+    let message;
+    let messages = {};
+    err.errors.forEach((error) => {
+      console.log(error.validatorKey, 'error.validatorKey');
+      switch (error.validatorKey) {
+        case 'isAlpha':
+          message = 'Only Alphabets Are Allowed';
+          break;
+      }
+
+      messages[error.path] = message;
+    });
+    res.status(500).json(messages);
+  }
+};
+
+let rawQueries = async (req, res) => {
+  try {
+    // const users = await db.sequelize.query('SELECT * FROM `users`', {
+    //   type: QueryTypes.SELECT,
+    // });
+
+    const users = await db.sequelize.query('SELECT * FROM `users`', {
+      type: QueryTypes.SELECT,
+      model: User,
+      mapToModel: true,
+    });
+
+    res.status(200).json(users);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+};
+
+const oneToOne = async (req, res) => {
+  try {
+    // const data = await User.create({
+    //   firstName: 'Virat',
+    //   lastName: 'Kholi',
+    //   userName: 'viratkholi12@gmail.com',
+    // });
+    // if (data && data.id) {
+    //   await contact.create({
+    //     permanent_Address: 'Tando Adam',
+    //     current_Address: 'Drig Road,KHI',
+    //     user_id: data.id,
+    //   });
+    // }
+
+    // const data = await User.findAll({
+    //   attributes: ['firstName', 'lastName'],
+    //   include: [
+    //     {
+    //       model: contact,
+    //       attributes: ['permanent_Address', 'current_Address'],
+    //     },
+    //   ],
+    // });
+
+    // const data = await User.findAll({
+    //   attributes: ['firstName', 'lastName'],
+    //   include: [
+    //     {
+    //       model: contact,
+    //       as:'contactDetail',
+    //       attributes: ['permanent_Address', 'current_Address'],
+    //     },
+    //   ],
+    //   where:{
+    //     id:3
+    //   }
+    // });
+
+    const data = await contact.findAll({
+      attributes: ['permanent_Address', 'current_Address'],
+      include: [
+        {
+          model: User,
+          as: 'userDetails',
+          attributes: ['firstName', 'lastName'],
+        },
+      ],
+      where: {
+        id: 2,
+      },
+    });
+
+    res.status(200).json(data);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+};
+
 module.exports = {
   addUser,
   getUsers,
@@ -198,4 +375,9 @@ module.exports = {
   updateUser,
   queryUser,
   getUserUsingPag,
+  finder,
+  getSetAndVirtual,
+  validationAndConstraint,
+  rawQueries,
+  oneToOne,
 };

@@ -20,11 +20,24 @@ try {
   db.sequelize = sequelize;
   db.Sequelize = Sequelize;
 
-  db.user = require('../model/user')(DataTypes, sequelize);
   db.employee = require('../model/employee')(Model, sequelize, DataTypes);
-
+  db.user = require('../model/user')(DataTypes, sequelize);
+  db.contact = require('../model/contact')(DataTypes, sequelize);
   //sync
-  db.sequelize.sync();
+
+  //relation between user and contact one to one relationship
+
+  db.user.hasOne(db.contact, {
+    foreignKey: 'user_id',
+    as: 'contactDetail',
+  }); // A HasOne B
+  db.contact.belongsTo(db.user, {
+    foreignKey: 'user_id',
+    as: 'userDetails',
+  }); // A BelongsTo B
+
+  //<---------------------one to one end------------------------>
+  db.sequelize.sync({ force: false });
 } catch (error) {
   console.log(`Error While Syncing Model ${error}`);
 }

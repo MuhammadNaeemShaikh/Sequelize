@@ -8,7 +8,12 @@ const {
   delUser,
   updateUser,
   queryUser,
-  getUserUsingPag
+  getUserUsingPag,
+  finder,
+  getSetAndVirtual,
+  validationAndConstraint,
+  rawQueries,
+  oneToOne
 } = require('../controller/user');
 
 router.post('/addUser', addUser);
@@ -19,5 +24,10 @@ router.delete('/User/:id', delUser);
 router.put('/User/:id', updateUser);
 router.get('/queryUser', queryUser);
 router.post('/getUserUsingPagination', getUserUsingPag);
+router.get('/finder', finder);
+router.get('/getSetAndVirtual', getSetAndVirtual);
+router.get('/validationAndConstraint', validationAndConstraint);
+router.get('/rawQueries', rawQueries);
+router.get('/oneToOne', oneToOne);
 
 module.exports = router;
