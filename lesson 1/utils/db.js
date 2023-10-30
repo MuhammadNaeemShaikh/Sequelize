@@ -27,17 +27,33 @@ try {
 
   //relation between user and contact one to one relationship
 
-  db.user.hasOne(db.contact, {
-    foreignKey: 'user_id',
-    as: 'contactDetail',
-  }); // A HasOne B
-  db.contact.belongsTo(db.user, {
-    foreignKey: 'user_id',
-    as: 'userDetails',
-  }); // A BelongsTo B
+  // db.user.hasOne(db.contact, {
+  //   foreignKey: 'user_id',
+  //   as: 'contactDetail',
+  // }); // A HasOne B
+  // db.contact.belongsTo(db.user, {
+  //   foreignKey: 'user_id',
+  //   as: 'userDetails',
+  // }); // A BelongsTo B
 
   //<---------------------one to one end------------------------>
-  db.sequelize.sync({ force: false });
+
+  //<----------------------one to many ------------------------->
+  // db.user.hasMany(db.contact, {
+  //   foreignKey: 'user_id',
+  //   as: 'contactDetail',
+  // }); // A HasOne B
+  // db.contact.belongsTo(db.user, {
+  //   foreignKey: 'user_id',
+  //   as: 'userDetails',
+  // });
+  //<----------------------one to many end------------------------>
+
+  //<-------------many to many ---------------------------------->
+  db.user.belongsToMany(db.contact, { through: 'user_contacts' });
+  db.contact.belongsToMany(db.user, { through: 'user_contacts' });
+  //<-----------------------many to many end----------------------------------->
+  db.sequelize.sync({ force: true });
 } catch (error) {
   console.log(`Error While Syncing Model ${error}`);
 }

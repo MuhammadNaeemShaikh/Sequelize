@@ -13,7 +13,8 @@ const {
   getSetAndVirtual,
   validationAndConstraint,
   rawQueries,
-  oneToOne
+  oneToOne,
+  oneToMany,
 } = require('../controller/user');
 
 router.post('/addUser', addUser);
@@ -29,5 +30,6 @@ router.get('/getSetAndVirtual', getSetAndVirtual);
 router.get('/validationAndConstraint', validationAndConstraint);
 router.get('/rawQueries', rawQueries);
 router.get('/oneToOne', oneToOne);
+router.post('/oneToMany', oneToMany);
 
 module.exports = router;

@@ -306,6 +306,7 @@ let rawQueries = async (req, res) => {
   }
 };
 
+//<--------------------------------------------one to one ---------------------------------------->
 const oneToOne = async (req, res) => {
   try {
     // const data = await User.create({
@@ -365,6 +366,69 @@ const oneToOne = async (req, res) => {
     res.status(500).json(err);
   }
 };
+//<--------------------------------------------one to many ---------------------------------------->
+
+const oneToMany = async (req, res) => {
+  try {
+    // const user = await User.create({
+    //   firstName: req.body.firstName,
+    //   lastName: req.body.lastName,
+    //   userName: req.body.userName,
+    // });
+
+    // if (user && user.id) {
+    //   const contactDataArray = req.body.contactData; // Assuming contactData is an array in the request body
+    //   const createdContacts = [];
+
+    //   for (const contactData of contactDataArray) {
+    //     const createdContact = await contact.create({
+    //       permanent_Address: contactData.permanent_Address,
+    //       current_Address: contactData.current_Address,
+    //       user_id: user.id,
+    //     });
+    //     createdContacts.push(createdContact);
+    //   }
+    //   res.status(200).json({ user, createdContacts });
+
+    // }
+
+    // const data = await User.findAll({
+    //   attributes: ['firstName', 'lastName','userName'],
+    //   include: [
+    //     {
+    //       model: contact,
+    //       as: 'contactDetail',
+    //       attributes: ['permanent_Address', 'current_Address'],
+    //     },
+    //   ],
+    //   // where: {
+    //   //   id: 1,
+    //   // },
+    // });
+
+    // res.status(200).json(data);
+
+    // const data = await contact.findAll({
+    //   attributes: ['permanent_Address', 'current_Address'],
+    //   include: [
+    //     {
+    //       model: user,
+    //       as: 'userDetails',
+    //       attributes: ['firstName', 'lastName', 'userName'],
+    //     },
+    //   ],
+
+    //   // where: {
+    //   //   id: 1,
+    //   // },
+    // });
+
+    res.status(200).json(data);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+};
 
 module.exports = {
   addUser,
@@ -380,4 +444,5 @@ module.exports = {
   validationAndConstraint,
   rawQueries,
   oneToOne,
+  oneToMany,
 };
