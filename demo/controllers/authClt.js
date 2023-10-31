@@ -165,17 +165,9 @@ let signUpfunc = async (email, password, role, res) => {
 
   res.status(200).json('Kindly Check Your Email');
 
-  const now = new Date();
-  const nextEvenMinute = new Date(now.getTime() + 2 * 60 * 1000); // 2 minutes from now
-
-  const millisecondsUntilNextEvenMinute =
-    nextEvenMinute.getSeconds() * 1000 + nextEvenMinute.getMilliseconds();
-
   setTimeout(async () => {
     try {
-      const deletionTime = new Date(
-        Date.now() + millisecondsUntilNextEvenMinute
-      );
+      const deletionTime = new Date(Date.now() + 2 * 60 * 1000);
 
       console.log('deletingTime', deletionTime);
 
@@ -192,7 +184,7 @@ let signUpfunc = async (email, password, role, res) => {
     } catch (error) {
       console.error('Error:', error);
     }
-  }, millisecondsUntilNextEvenMinute);
+  }, 2 * 60 * 1000);
 };
 
 //generate Access token
