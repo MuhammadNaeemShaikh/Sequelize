@@ -1,7 +1,11 @@
+const userClt = require('../controllers/userClt');
 const express = require('express');
 const router = express.Router();
-const userClt = require('../controllers/userClt');
 
-router.post('/signUp', userClt.signUP);
+console.log("run")
+router.put('/verifyOtp', userClt.verifyOtp);
+router.put('/completeProfile', userClt.completeProfile);
+
+
 
 module.exports = router;

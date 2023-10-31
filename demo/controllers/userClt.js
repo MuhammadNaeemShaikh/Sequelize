@@ -1,52 +1,76 @@
 const {
-  db: { user: User },
+  db: { user: User, otp: Otp, sequelize, Op },
 } = require('../utils/db');
 
 module.exports = {
-  signUP: async (req, res) => {
+  verifyOtp: async (req, res) => {
     try {
-      const { email, password, confirmPass } = req.body;
-      let error;
+      const { email, code } = req.body;
 
-      if (password !== confirmPass) {
-        error = new Error('Password and Confirm password do not match');
-        error.statusCode = 400; // Set the status code for the error
-        throw error;
-      }
-
-      const isEmailExist = await User.findAll({
+      const isOtpVerify = await Otp.findAll({
         where: {
-          userName: email,
+          email,
+          code,
         },
       });
 
-      res.status(200).json(isEmailExist);
+      if (isOtpVerify.length > 0) {
+        await User.update(
+          { isApprovedAccount: true },
+          {
+            where: {
+              userName: email,
+            },
+          }
+        );
 
-      if (isEmailExist.length === 0) {
-        // const createUserRecord = await User.create({
-        //   userName: email,
-        //   password,
-        // });
+        await Otp.destroy({
+          where: {
+            email,
+            code,
+          },
+        });
 
-        // res.status(200).json(createUserRecord);
-        //sending email
+        res.status(200).json({
+          success: true,
+          msg: 'OTP VERIFIED',
+        });
       } else {
-        error = new Error('This Email Already in Use');
-        error.statusCode = 400; // Set the status code for the error
-        throw error;
+        res.status(400).json({
+          success: false,
+          msg: 'Otp Not Found',
+        });
       }
-
-      res.status(200).json(isEmailExist.length);
-
-      //   const createRecord = await user.create({
-      //     userName: email,
-      //   });
     } catch (error) {
-      const statusCode = error.statusCode || 500; // Default to 500 if no status code is provided
-      console.error(error);
-      res.status(statusCode).json({
+      console.log(error);
+      res.status(500).json({
         success: false,
-        err: error.message,
+        err: error,
+      });
+    }
+  },
+  completeProfile: async (req, res) => {
+    try {
+      const { firstName, middleName, lastName, address, contactNo, email } =
+        req.body;
+
+      const updatedProfile = await User.update(
+        {
+          ...req.body,
+        },
+        {
+          where: {
+            userName: email,
+          },
+        }
+      );
+
+      res.status(200).json(updatedProfile);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({
+        success: false,
+        err: error,
       });
     }
   },

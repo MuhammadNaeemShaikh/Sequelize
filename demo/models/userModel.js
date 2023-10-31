@@ -1,13 +1,22 @@
 const { Sequelize } = require('sequelize');
+const bcrypt = require('bcrypt');
 
 module.exports = (DataTypes, sequelize) => {
   const User = sequelize.define(
     'User',
     {
+      role: {
+        type: DataTypes.ENUM('admin', 'user'),
+        allowNull: false,
+        defaultValue: 'user',
+        set(value) {
+          this.setDataValue('role', value.toLowerCase());
+        },
+      },
       firstName: {
         type: DataTypes.STRING,
         allowNull: true,
-        defaultValue: 'na',
+        defaultValue: null,
         validate: {
           isAlpha: {
             msg: 'Only Alphabetic Characters Are allowed',
@@ -22,11 +31,14 @@ module.exports = (DataTypes, sequelize) => {
             ? rawValue.charAt(0).toUpperCase() + rawValue.slice(1)
             : null;
         },
+        set(value) {
+          this.setDataValue('firstName', value.toLowerCase());
+        },
       },
       middleName: {
         type: DataTypes.STRING,
         allowNull: true,
-        defaultValue: 'na',
+        defaultValue: null,
         validate: {
           isAlpha: {
             msg: 'Only Alphabetic Characters Are allowed',
@@ -41,11 +53,14 @@ module.exports = (DataTypes, sequelize) => {
             ? rawValue.charAt(0).toUpperCase() + rawValue.slice(1)
             : null;
         },
+        set(value) {
+          this.setDataValue('middleName', value.toLowerCase());
+        },
       },
       lastName: {
         type: DataTypes.STRING,
         allowNull: true,
-        defaultValue: 'na',
+        defaultValue: null,
         validate: {
           isAlpha: {
             msg: 'Only Alphabetic Characters Are allowed',
@@ -59,6 +74,9 @@ module.exports = (DataTypes, sequelize) => {
           return rawValue
             ? rawValue.charAt(0).toUpperCase() + rawValue.slice(1)
             : null;
+        },
+        set(value) {
+          this.setDataValue('lastName', value.toLowerCase());
         },
       },
       userName: {
@@ -82,21 +100,26 @@ module.exports = (DataTypes, sequelize) => {
             msg: 'Please enter a password between 8 and 100 characters',
           },
         },
+        set(value) {
+          const salt = bcrypt.genSaltSync(10);
+          const hash = bcrypt.hashSync(value, salt);
+          this.setDataValue('password', hash);
+        },
       },
       address: {
         type: DataTypes.STRING,
         allowNull: true,
-        defaultValue: 'na',
-        validate: {
-          isLowercase: {
-            msg: 'Please enter your Address in Lower Case Letter',
-          },
-        },
+        defaultValue: null,
       },
       contactNo: {
         type: DataTypes.STRING,
         allowNull: true,
-        defaultValue: 'na',
+        defaultValue: null,
+      },
+      isApprovedAccount: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+        defaultValue: false,
       },
     },
     {
