@@ -6,9 +6,6 @@ module.exports = (DataTypes, sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          isAlpha: {
-            msg: 'Only Alphabetic Characters Are allowed',
-          },
           isLowercase: {
             msg: 'Please enter your Name in Lower Case Letter',
           },
@@ -21,9 +18,6 @@ module.exports = (DataTypes, sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          isAlpha: {
-            msg: 'Only Alphabetic Characters Are allowed',
-          },
           isLowercase: {
             msg: 'Please enter your Name in Lower Case Letter',
           },
@@ -36,9 +30,7 @@ module.exports = (DataTypes, sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          isAlpha: {
-            msg: 'Only Alphabetic Characters Are allowed',
-          },
+         
         },
       },
       productPrice: {

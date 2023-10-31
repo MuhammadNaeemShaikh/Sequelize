@@ -23,7 +23,7 @@ app.use('/api/authRoutes', authRoutes);
 //<---------------- User Routes-------------->
 app.use('/api/userRoutes', userRoutes);
 //<---------------- Product Routes-------------->
-app.use('/productRoute', productRoutes);
+app.use('/api/productRoutes', productRoutes);
 
 //app is listening on 3000
 app.listen(3000, () => {

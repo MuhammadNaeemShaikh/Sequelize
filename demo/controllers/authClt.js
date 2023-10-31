@@ -99,25 +99,25 @@ module.exports = {
 
 //shedule a cron job to run on every minute
 
-const job = schedule.scheduleJob('* * * * *', async () => {
-  try {
-    const now = new Date();
-    const expirationTime = new Date(now.getTime() - 2 * 60 * 1000); // Two minutes ago
+// const job = schedule.scheduleJob('* * * * *', async () => {
+//   try {
+// const now = new Date();
+// const expirationTime = new Date(now.getTime() - 2 * 60 * 1000); // Two minutes ago
 
-    // Delete expired records
-    await Otp.destroy({
-      where: {
-        expiresIn: {
-          [Op.lt]: expirationTime,
-        },
-      },
-    });
+// // Delete expired records
+// await Otp.destroy({
+//   where: {
+//     expiresIn: {
+//       [Op.lt]: expirationTime,
+//     },
+//   },
+// });
 
-    console.log('Expired OTP records deleted successfully.');
-  } catch (error) {
-    console.error('Error deleting expired OTP records:', error);
-  }
-});
+// console.log('Expired OTP records deleted successfully.');
+//   } catch (error) {
+//     console.error('Error deleting expired OTP records:', error);
+//   }
+// });
 
 //sign up function
 let signUpfunc = async (email, password, role, res) => {
@@ -155,6 +155,8 @@ let signUpfunc = async (email, password, role, res) => {
   const expirationTime = new Date();
   expirationTime.setMinutes(expirationTime.getMinutes() + 2);
 
+  console.log('initialTime', expirationTime);
+
   await Otp.create({
     email,
     code: generateToken,
@@ -162,6 +164,35 @@ let signUpfunc = async (email, password, role, res) => {
   });
 
   res.status(200).json('Kindly Check Your Email');
+
+  const now = new Date();
+  const nextEvenMinute = new Date(now.getTime() + 2 * 60 * 1000); // 2 minutes from now
+
+  const millisecondsUntilNextEvenMinute =
+    nextEvenMinute.getSeconds() * 1000 + nextEvenMinute.getMilliseconds();
+
+  setTimeout(async () => {
+    try {
+      const deletionTime = new Date(
+        Date.now() + millisecondsUntilNextEvenMinute
+      );
+
+      console.log('deletingTime', deletionTime);
+
+      // Delete expired records
+      await Otp.destroy({
+        where: {
+          expiresIn: {
+            [Op.lt]: deletionTime,
+          },
+        },
+      });
+
+      console.log('Expired OTP records deleted successfully.');
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }, millisecondsUntilNextEvenMinute);
 };
 
 //generate Access token

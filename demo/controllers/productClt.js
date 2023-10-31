@@ -5,7 +5,7 @@ const {
 module.exports = {
   addProduct: async (req, res) => {
     try {
-      const createProduct = Product.create({
+      const createProduct = await Product.create({
         ...req.body,
       });
 
