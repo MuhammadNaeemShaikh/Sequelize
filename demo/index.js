@@ -6,7 +6,7 @@ const dotenv = require('dotenv');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
-
+const orderRoutes = require('./routes/orderRoutes')
 //dotenv configuration
 dotenv.config();
 
@@ -24,6 +24,9 @@ app.use('/api/authRoutes', authRoutes);
 app.use('/api/userRoutes', userRoutes);
 //<---------------- Product Routes-------------->
 app.use('/api/productRoutes', productRoutes);
+//<---------------- Product Routes-------------->
+app.use('/api/orderRoutes', orderRoutes);
+
 
 //app is listening on 3000
 app.listen(3000, () => {

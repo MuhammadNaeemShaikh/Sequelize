@@ -3,7 +3,7 @@ const {
 } = require('../utils/db');
 const emailSender = require('../utils/email');
 const generateRandomNo = require('../utils/generatingRandomNo');
-const schedule = require('node-schedule');
+// const schedule = require('node-schedule');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -81,7 +81,7 @@ module.exports = {
         });
       }
 
-      const accessToken = await generateAccessToken(user);
+      const accessToken = await generateAccessToken(user.dataValues);
 
       res.status(200).json({
         success: true,
@@ -191,7 +191,7 @@ let signUpfunc = async (email, password, role, res) => {
 const generateAccessToken = (user) => {
   return jwt.sign(
     {
-      _id: user._id,
+      _id: user.id,
       isAdmin: user.role,
     },
     process.env.JWT_SEC,

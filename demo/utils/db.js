@@ -1,10 +1,20 @@
 const { Sequelize, DataTypes, Model, Op } = require('sequelize');
 const db = {};
 
-const sequelize = new Sequelize('ecommerce', 'root', '12345', {
-  host: 'localhost',
-  logging: false,
+// const sequelize = new Sequelize('ecommerce', 'root', '12345', {
+//   host: 'localhost',
+//   logging: false,
+//   dialect: 'mysql',
+// });
+
+const sequelize = new Sequelize('database-2', 'root', 'matz12345', {
+  host: 'database-2.cwaiqakemhu8.us-east-1.rds.amazonaws.com',
+  port: 3306,
   dialect: 'mysql',
+  logging: false,
+  dialectOptions: {
+    connectTimeout: 600000,
+  },
 });
 
 async function authenticateDatabase() {
@@ -26,6 +36,32 @@ try {
   db.user = require('../models/userModel')(DataTypes, sequelize);
   db.otp = require('../models/otp')(DataTypes, sequelize);
   db.product = require('../models/productModel')(DataTypes, sequelize);
+  db.order = require('../models/orderModel')(DataTypes, sequelize);
+
+  //<----------------------one to many user------------------------->
+  db.user.hasMany(db.order, {
+    foreignKey: 'userId',
+    as: 'orderDetails',
+  }); // A HasOne B
+  db.order.belongsTo(db.user, {
+    foreignKey: 'userId',
+    as: 'userDetails',
+  });
+
+  //<----------------------one to many end user and order------------------------>
+  //<----------------------one to many one order and product------------------------>
+
+  db.product.hasOne(db.order, {
+    foreignKey: 'productId',
+    as: 'productDetails',
+  });
+  // A HasOne B
+  db.order.belongsTo(db.product, {
+    foreignKey: 'productId',
+    as: 'productDetails',
+  });
+
+  //<----------------------one to many one order and product end------------------------>
 } catch (error) {
   console.error('Error importing userModel:', error);
   throw error;
