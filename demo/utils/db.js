@@ -7,8 +7,8 @@ const db = {};
 //   dialect: 'mysql',
 // });
 
-const sequelize = new Sequelize('database-2', 'root', 'matz12345', {
-  host: 'database-2.cwaiqakemhu8.us-east-1.rds.amazonaws.com',
+const sequelize = new Sequelize('testSequelize', 'admin', '12345678', {
+  host: '127.0.0.1 ',
   port: 3306,
   dialect: 'mysql',
   logging: false,
