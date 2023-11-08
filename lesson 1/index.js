@@ -30,8 +30,7 @@ app.use(bodyParser.json());
 
 ///routes
 app.use('/api/user', userRoutes);
-app.use('/api/empl',empRoutes)
-
+app.use('/api/empl', empRoutes);
 
 app.get('/', (req, res) => {
   res.send('Hello World');

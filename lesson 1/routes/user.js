@@ -15,6 +15,7 @@ const {
   rawQueries,
   oneToOne,
   oneToMany,
+  manytoMany
 } = require('../controller/user');
 
 router.post('/addUser', addUser);
@@ -31,5 +32,6 @@ router.get('/validationAndConstraint', validationAndConstraint);
 router.get('/rawQueries', rawQueries);
 router.get('/oneToOne', oneToOne);
 router.post('/oneToMany', oneToMany);
+router.post('/manytoMany', manytoMany);
 
 module.exports = router;

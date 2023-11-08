@@ -1,21 +1,21 @@
 const { Sequelize, DataTypes, Model, Op } = require('sequelize');
 const db = {};
 
-// const sequelize = new Sequelize('ecommerce', 'root', '12345', {
-//   host: 'localhost',
-//   logging: false,
-//   dialect: 'mysql',
-// });
-
-const sequelize = new Sequelize('testSequelize', 'admin', '12345678', {
-  host: '127.0.0.1 ',
-  port: 3306,
-  dialect: 'mysql',
+const sequelize = new Sequelize('ecommerce', 'root', '12345', {
+  host: 'localhost',
   logging: false,
-  dialectOptions: {
-    connectTimeout: 600000,
-  },
+  dialect: 'mysql',
 });
+
+// const sequelize = new Sequelize('testSequelize', 'admin', 'matz12345', {
+//   host: '127.0.0.1', // Remove the trailing space after the IP address
+//   port: 3306,
+//   dialect: 'mysql',
+//   logging: false,
+//   dialectOptions: {
+//     connectTimeout: 600000,
+//   },
+// });
 
 async function authenticateDatabase() {
   try {

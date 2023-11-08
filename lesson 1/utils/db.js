@@ -3,13 +3,13 @@ const { DataTypes, Model } = require('sequelize');
 
 const sequelize = new Sequelize('employeedb', 'root', '12345', {
   host: 'localhost',
-  logging: true,
+  logging: false,
   dialect:
     'mysql' /* one of  | 'postgres' | 'sqlite' | 'mariadb' | 'mssql' | 'db2' | 'snowflake' | 'oracle' */,
 });
 
 try {
-  sequelize.authenticate();
+  sequelize.authenticate({ force: false });
   console.log('Connection has been established successfully.');
 } catch (error) {
   console.error('Unable to connect to the database:', error);
@@ -23,6 +23,12 @@ try {
   db.employee = require('../model/employee')(Model, sequelize, DataTypes);
   db.user = require('../model/user')(DataTypes, sequelize);
   db.contact = require('../model/contact')(DataTypes, sequelize);
+  db.user_contacts = require('../model/user_contacts')(
+    DataTypes,
+    sequelize,
+    db.user,
+    db.contact
+  );
   //sync
 
   //relation between user and contact one to one relationship
@@ -50,10 +56,22 @@ try {
   //<----------------------one to many end------------------------>
 
   //<-------------many to many ---------------------------------->
-  db.user.belongsToMany(db.contact, { through: 'user_contacts' });
-  db.contact.belongsToMany(db.user, { through: 'user_contacts' });
+
+  //auto create user_contact model
+  // db.user.belongsToMany(db.contact, { through: 'user_contacts' });
+  // db.contact.belongsToMany(db.user, { through: 'user_contacts' });
+
+  //manually creating user_contact model or junction model or
+  db.user.belongsToMany(db.contact, {
+    through: db.user_contacts,
+    foreignKey: 'UserId',
+  });
+  db.contact.belongsToMany(db.user, {
+    through: db.user_contacts,
+    foreignKey: 'contactId',
+  });
   //<-----------------------many to many end----------------------------------->
-  db.sequelize.sync({ force: true });
+  db.sequelize.sync({ force: false });
 } catch (error) {
   console.log(`Error While Syncing Model ${error}`);
 }
